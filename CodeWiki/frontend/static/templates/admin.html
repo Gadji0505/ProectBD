@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель - CodeWiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Админ-шапка -->
+  <header class="navbar admin-navbar">
+    <div class="container">
+      <a href="/admin/dashboard.html" class="navbar-brand">
+        <i class="fas fa-code"></i> CodeWiki <span class="admin-badge">Admin</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/admin/dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Панель</a>
+        <a href="/admin/users.html"><i class="fas fa-users"></i> Пользователи</a>
+        <a href="/admin/articles.html"><i class="fas fa-book"></i> Статьи</a>
+        <a href="/admin/reports.html"><i class="fas fa-flag"></i> Жалобы <span class="badge" id="reportsCount">0</span></a>
+        <a href="/admin/settings.html"><i class="fas fa-cog"></i> Настройки</a>
+        <button class="btn btn-danger" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Выход</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container admin-container">
+    <!-- Боковое меню -->
+    <div class="admin-sidebar">
+      <ul>
+        <li><a href="/admin/dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+        <li><a href="/admin/users.html"><i class="fas fa-users"></i> Управление пользователями</a></li>
+        <li><a href="/admin/articles.html"><i class="fas fa-book"></i> Модерация статей</a></li>
+        <li><a href="/admin/reports.html"><i class="fas fa-flag"></i> Жалобы <span class="badge" id="sidebarReportsCount">0</span></a></li>
+        <li><a href="/admin/categories.html"><i class="fas fa-tags"></i> Категории и теги</a></li>
+        <li><a href="/admin/settings.html"><i class="fas fa-cog"></i> Настройки системы</a></li>
+        <li><a href="/admin/backup.html"><i class="fas fa-database"></i> Резервные копии</a></li>
+        <li><a href="/admin/logs.html"><i class="fas fa-clipboard-list"></i> Логи системы</a></li>
+      </ul>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="admin-content">
+      <h1><i class="fas fa-tachometer-alt"></i> Административная панель</h1>
+      
+      <!-- Карточки статистики -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-info">
+            <h3>Пользователи</h3>
+            <p id="usersCount">0</p>
+            <small><span id="usersToday">0</span> сегодня</small>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-book"></i></div>
+          <div class="stat-info">
+            <h3>Статьи</h3>
+            <p id="articlesCount">0</p>
+            <small><span id="articlesToday">0</span> сегодня</small>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-flag"></i></div>
+          <div class="stat-info">
+            <h3>Жалобы</h3>
+            <p id="openReportsCount">0</p>
+            <small><span id="reportsToday">0</span> сегодня</small>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-comments"></i></div>
+          <div class="stat-info">
+            <h3>Комментарии</h3>
+            <p id="commentsCount">0</p>
+            <small><span id="commentsToday">0</span> сегодня</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Последняя активность -->
+      <section class="recent-activity">
+        <h2><i class="fas fa-clock"></i> Последняя активность</h2>
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Пользователь</th>
+                <th>Действие</th>
+                <th>Объект</th>
+                <th>IP</th>
+              </tr>
+            </thead>
+            <tbody id="activityTable">
+              <tr>
+                <td colspan="5" class="text-center">Загрузка данных...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Быстрые действия -->
+      <section class="quick-actions">
+        <h2><i class="fas fa-bolt"></i> Быстрые действия</h2>
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="createUserBtn"><i class="fas fa-user-plus"></i> Создать пользователя</button>
+          <button class="btn btn-primary" id="createArticleBtn"><i class="fas fa-plus"></i> Создать статью</button>
+          <button class="btn btn-warning" id="clearCacheBtn"><i class="fas fa-broom"></i> Очистить кеш</button>
+          <button class="btn btn-danger" id="maintenanceBtn"><i class="fas fa-tools"></i> Режим обслуживания</button>
+        </div>
+      </section>
+
+      <!-- Системная информация -->
+      <section class="system-info">
+        <h2><i class="fas fa-server"></i> Системная информация</h2>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3><i class="fas fa-microchip"></i> CPU</h3>
+            <div class="progress-bar">
+              <div class="progress" id="cpuUsage" style="width: 0%"></div>
+            </div>
+            <p id="cpuText">0%</p>
+          </div>
+          <div class="info-card">
+            <h3><i class="fas fa-memory"></i> Память</h3>
+            <div class="progress-bar">
+              <div class="progress" id="memoryUsage" style="width: 0%"></div>
+            </div>
+            <p id="memoryText">0 MB / 0 MB</p>
+          </div>
+          <div class="info-card">
+            <h3><i class="fas fa-database"></i> База данных</h3>
+            <p>Размер: <span id="dbSize">0 MB</span></p>
+            <p>Запросов/сек: <span id="dbQueries">0</span></p>
+          </div>
+          <div class="info-card">
+            <h3><i class="fas fa-network-wired"></i> Сеть</h3>
+            <p>Входящий: <span id="networkIn">0 KB/s</span></p>
+            <p>Исходящий: <span id="networkOut">0 KB/s</span></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Админ-подвал -->
+  <footer class="admin-footer">
+    <div class="container">
+      <p>Админ-панель CodeWiki | Версия <span id="appVersion">1.0.0</span></p>
+      <p id="serverStats">Загрузка сервера: <span id="serverLoad">0%</span> | Память: <span id="serverMemory">0 MB</span> | Время работы: <span id="uptime">0d 0h 0m</span></p>
+    </div>
+  </footer>
+
+  <!-- Модальные окна -->
+  <div class="modal" id="createUserModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-user-plus"></i> Создать пользователя</h2>
+      <form id="createUserForm">
+        <div class="form-group">
+          <label for="newUsername">Имя пользователя</label>
+          <input type="text" id="newUsername" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="newEmail">Email</label>
+          <input type="email" id="newEmail" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="newPassword">Пароль</label>
+          <input type="password" id="newPassword" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="userRole">Роль</label>
+          <select id="userRole" class="form-control">
+            <option value="user">Пользователь</option>
+            <option value="editor">Редактор</option>
+            <option value="moderator">Модератор</option>
+            <option value="admin">Администратор</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Создать</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Скрипты -->
+  <script src="/js/auth.js" type="module"></script>
+  <script src="/js/api.js" type="module"></script>
+  <script src="/js/admin.js" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Инициализация модального окна
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('createUserModal');
+      const btn = document.getElementById('createUserBtn');
+      const span = document.getElementsByClassName('close')[0];
+
+      btn.onclick = () => modal.style.display = 'block';
+      span.onclick = () => modal.style.display = 'none';
+      
+      window.onclick = (event) => {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      };
+
+      // Переключение темы
+      const theme = localStorage.getItem('codewiki_admin_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    });
+  </script>
+</body>
+</html>
