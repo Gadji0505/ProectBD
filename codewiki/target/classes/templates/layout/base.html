@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - CodeWiki'">CodeWiki</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/markdown.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Fragment -->
+    <header th:replace="layout/header :: header"></header>
+
+    <!-- Main Content Section -->
+    <main class="container" th:fragment="content">
+        <div class="content-wrapper">
+            <th:block th:replace="${content}"></th:block>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <footer th:replace="layout/footer :: footer"></footer>
+
+    <!-- Error Messages Fragment -->
+    <div th:if="${error}" class="alert alert-error" th:fragment="error-message">
+        <p th:text="${error}"></p>
+    </div>
+
+    <!-- Success Messages Fragment -->
+    <div th:if="${success}" class="alert alert-success" th:fragment="success-message">
+        <p th:text="${success}"></p>
+    </div>
+
+    <!-- Base Styles -->
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: var(--light-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+            flex: 1;
+        }
+        
+        .content-wrapper {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1rem 0;
+            }
+            
+            .content-wrapper {
+                padding: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>

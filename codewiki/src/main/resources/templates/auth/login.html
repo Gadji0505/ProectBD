@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head('Login')">
+</head>
+<body>
+    <header th:replace="layout/header :: header"></header>
+
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-form">
+                <h1>Login to CodeWiki</h1>
+                
+                <div th:if="${param.error}" class="alert alert-danger">
+                    Invalid email or password
+                </div>
+                
+                <div th:if="${param.logout}" class="alert alert-success">
+                    You have been logged out successfully
+                </div>
+                
+                <form th:action="@{/auth/login}" method="post">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="remember-me" name="remember-me" class="form-check-input">
+                        <label for="remember-me" class="form-check-label">Remember me</label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <a th:href="@{/auth/register}" class="btn btn-link">Register</a>
+                        <a th:href="@{/auth/forgot-password}" class="btn btn-link">Forgot password?</a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="auth-side">
+                <h3>Why join CodeWiki?</h3>
+                <ul class="features-list">
+                    <li>Create and edit programming articles</li>
+                    <li>Earn reputation points</li>
+                    <li>Contribute to the community</li>
+                    <li>Bookmark favorite articles</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/footer :: footer"></footer>
+
+    <style>
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        
+        .auth-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .auth-side {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 5px;
+        }
+        
+        .alert {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-check-input {
+            margin-right: 0.5rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-primary {
+            background-color: #28a745;
+            color: white;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+        
+        .btn-link {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .features-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

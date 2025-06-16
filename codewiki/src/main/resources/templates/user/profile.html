@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head(${user.username + ' - Profile'})">
+</head>
+<body>
+    <header th:replace="layout/header :: header"></header>
+
+    <main class="container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="avatar-placeholder" th:text="${user.username.substring(0, 1).toUpperCase()}"></div>
+                </div>
+                <div class="profile-info">
+                    <h1 th:text="${user.username}"></h1>
+                    <div class="profile-meta">
+                        <span class="reputation" th:text="'Reputation: ' + ${user.reputation}"></span>
+                        <span class="member-since" th:text="'Member since: ' + ${#dates.format(user.registrationDate, 'MMMM yyyy')}"></span>
+                    </div>
+                    <div class="profile-bio" th:if="${user.bio}" th:text="${user.bio}"></div>
+                    <div class="profile-actions" th:if="${isCurrentUser}">
+                        <a th:href="@{/user/edit}" class="btn btn-edit">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-tabs">
+                    <button class="tab-btn active" onclick="openTab('articles')">Articles</button>
+                    <button class="tab-btn" onclick="openTab('comments')">Comments</button>
+                    <button class="tab-btn" th:if="${isCurrentUser}" onclick="openTab('bookmarks')">Bookmarks</button>
+                </div>
+
+                <div id="articles" class="tab-content" style="display:block">
+                    <h2>Recent Articles</h2>
+                    <div class="article-list">
+                        <div class="article-item" th:each="article : ${articles}">
+                            <h3>
+                                <a th:href="@{/articles/view(slug=${article.slug})}" 
+                                   th:text="${article.title}"></a>
+                            </h3>
+                            <div class="article-meta">
+                                <span th:text="${#dates.format(article.createdAt, 'yyyy-MM-dd')}"></span>
+                                <span th:text="${article.commentCount} + ' comments'"></span>
+                            </div>
+                        </div>
+                        <div class="no-items" th:if="${articles.empty}">
+                            <p th:text="${isCurrentUser} ? 'You have not written any articles yet.' : 'This user has not written any articles yet.'"></p>
+                            <a th:href="@{/articles/create}" class="btn" th:if="${isCurrentUser}">Write Your First Article</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="comments" class="tab-content">
+                    <h2>Recent Comments</h2>
+                    <div class="comment-list">
+                        <div class="comment-item" th:each="comment : ${comments}">
+                            <div class="comment-meta">
+                                <span>On: 
+                                    <a th:href="@{/articles/view(slug=${comment.article.slug}) + '#comment-' + ${comment.id}}" 
+                                       th:text="${comment.article.title}"></a>
+                                </span>
+                                <span th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd')}"></span>
+                            </div>
+                            <div class="comment-preview" th:text="${comment.content.length() > 100} ? 
+                                ${comment.content.substring(0, 100) + '...'} : ${comment.content}"></div>
+                        </div>
+                        <div class="no-items" th:if="${comments.empty}">
+                            <p th:text="${isCurrentUser} ? 'You have not made any comments yet.' : 'This user has not made any comments yet.'"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bookmarks" class="tab-content" th:if="${isCurrentUser}">
+                    <h2>Bookmarked Articles</h2>
+                    <div class="bookmark-list">
+                        <div class="bookmark-item" th:each="bookmark : ${bookmarks}">
+                            <h3>
+                                <a th:href="@{/articles/view(slug=${bookmark.article.slug})}" 
+                                   th:text="${bookmark.article.title}"></a>
+                            </h3>
+                            <div class="bookmark-meta">
+                                <span th:text="'Bookmarked on: ' + ${#dates.format(bookmark.createdAt, 'yyyy-MM-dd')}"></span>
+                            </div>
+                        </div>
+                        <div class="no-items" th:if="${bookmarks.empty}">
+                            <p>You have no bookmarked articles yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/footer :: footer"></footer>
+
+    <style>
+        .profile-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-avatar {
+            flex: 0 0 100px;
+        }
+
+        .avatar-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #666;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .profile-bio {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .profile-actions {
+            margin-top: 1rem;
+        }
+
+        .btn-edit {
+            background-color: #6c757d;
+            color: white;
+            padding: 0.5rem 1rem;
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            border-bottom: 3px solid #3498db;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .article-item, .comment-item, .bookmark-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .article-item:last-child, .comment-item:last-child, .bookmark-item:last-child {
+            border-bottom: none;
+        }
+
+        .article-meta, .comment-meta, .bookmark-meta {
+            display: flex;
+            gap: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        .comment-preview {
+            color: #555;
+            margin: 0.5rem 0;
+        }
+
+        .no-items {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-meta {
+                justify-content: center;
+            }
+
+            .profile-tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+
+    <script>
+        function openTab(tabName) {
+            // Hide all tab content
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].style.display = "none";
+            }
+
+            // Remove active class from all buttons
+            const tabButtons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+
+            // Show the current tab and add active class to the button
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>

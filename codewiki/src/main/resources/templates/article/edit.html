@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head('Edit Article')">
+</head>
+<body>
+    <header th:replace="layout/header :: header"></header>
+
+    <main class="container">
+        <div class="article-form-container">
+            <h1>Edit Article</h1>
+            
+            <form th:action="@{/articles/update}" method="post" class="article-form">
+                <input type="hidden" name="id" th:value="${article.id}">
+                
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" class="form-control" 
+                           th:value="${article.title}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Content (Markdown supported)</label>
+                    <textarea id="content" name="content" class="form-control" rows="15" 
+                              th:text="${article.content}" required></textarea>
+                    <div class="markdown-tips">
+                        <details>
+                            <summary>Markdown Formatting Tips</summary>
+                            <ul>
+                                <li><strong>Headers:</strong> # H1, ## H2, ### H3</li>
+                                <li><strong>Bold:</strong> **bold text**</li>
+                                <li><strong>Italic:</strong> *italic text*</li>
+                                <li><strong>Code:</strong> `inline code` or ``` for blocks</li>
+                                <li><strong>Lists:</strong> - or 1. for bullet/numbered lists</li>
+                                <li><strong>Links:</strong> [text](url)</li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Categories</label>
+                    <div class="categories-list">
+                        <div th:each="category : ${categories}" class="category-checkbox">
+                            <input type="checkbox" name="categories" th:value="${category.id}" 
+                                   th:id="'category-' + ${category.id}"
+                                   th:checked="${article.categories.?[id == category.id].size() > 0}">
+                            <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="tags-list">
+                        <div th:each="tag : ${tags}" class="tag-checkbox">
+                            <input type="checkbox" name="tags" th:value="${tag.id}" 
+                                   th:id="'tag-' + ${tag.id}"
+                                   th:checked="${article.tags.?[id == tag.id].size() > 0}">
+                            <label th:for="'tag-' + ${tag.id}" th:text="${tag.name}"></label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Article</button>
+                    <a th:href="@{/articles/view(id=${article.id})}" class="btn btn-secondary">Cancel</a>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete Article</button>
+                </div>
+            </form>
+            
+            <form id="deleteForm" th:action="@{/articles/delete}" method="post">
+                <input type="hidden" name="id" th:value="${article.id}">
+            </form>
+        </div>
+    </main>
+
+    <footer th:replace="layout/footer :: footer"></footer>
+
+    <script>
+        function confirmDelete() {
+            if (confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+
+    <style>
+        .article-form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .article-form {
+            margin-top: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea.form-control {
+            min-height: 300px;
+            font-family: monospace;
+        }
+        
+        .markdown-tips {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .markdown-tips details {
+            margin-top: 0.5rem;
+        }
+        
+        .markdown-tips ul {
+            margin: 0.5rem 0 0 1.5rem;
+            padding: 0;
+        }
+        
+        .categories-list,
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .category-checkbox,
+        .tag-checkbox {
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-checkbox input,
+        .tag-checkbox input {
+            margin-right: 0.5rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-primary {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
+</body>
+</html>

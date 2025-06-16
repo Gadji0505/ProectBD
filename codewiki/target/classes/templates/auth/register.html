@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head('Register')">
+</head>
+<body>
+    <header th:replace="layout/header :: header"></header>
+
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-form">
+                <h1>Create an Account</h1>
+                
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                
+                <form th:action="@{/auth/register}" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" 
+                               th:value="${user != null} ? ${user.username} : ''" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" 
+                               th:value="${user != null} ? ${user.email} : ''" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                        <small class="form-text">Minimum 8 characters</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
+                        <label for="terms" class="form-check-label">I agree to the 
+                            <a href="/terms" target="_blank">Terms of Service</a>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <a th:href="@{/auth/login}" class="btn btn-link">Already have an account? Login</a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="auth-side">
+                <h3>Benefits of Joining</h3>
+                <ul class="benefits-list">
+                    <li>Contribute to programming articles</li>
+                    <li>Earn reputation points for helpful contributions</li>
+                    <li>Save and organize your favorite articles</li>
+                    <li>Participate in community discussions</li>
+                    <li>Get notified about article updates</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/footer :: footer"></footer>
+
+    <style>
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        
+        .auth-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .auth-side {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 5px;
+        }
+        
+        .alert {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-text {
+            display: block;
+            margin-top: 0.25rem;
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-check-input {
+            margin-right: 0.5rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: #28a745;
+            color: white;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+        
+        .btn-link {
+            color: #0366d6;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+        
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .benefits-list li {
+            padding: 0.75rem 0;
+            position: relative;
+            padding-left: 1.75rem;
+            line-height: 1.5;
+        }
+        
+        .benefits-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head('Admin Dashboard')">
+</head>
+<body>
+    <header th:replace="layout/header :: header"></header>
+
+    <main class="container">
+        <div class="admin-dashboard">
+            <h1>Admin Dashboard</h1>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Articles</h3>
+                    <p th:text="${stats.articleCount}">0</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p th:text="${stats.userCount}">0</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Pending Reports</h3>
+                    <p th:text="${stats.pendingReportCount}">0</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Recent Comments</h3>
+                    <p th:text="${stats.recentCommentCount}">0</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-sections">
+                <section class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <ul class="activity-list">
+                        <li th:each="activity : ${recentActivities}">
+                            <span th:text="${activity.description}">Activity description</span>
+                            <small th:text="${#dates.format(activity.timestamp, 'yyyy-MM-dd HH:mm')}">timestamp</small>
+                        </li>
+                    </ul>
+                </section>
+                
+                <section class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <a href="/admin/users" class="btn">Manage Users</a>
+                        <a href="/admin/reports" class="btn">View Reports</a>
+                        <a href="/articles/create" class="btn">Create Article</a>
+                        <a href="/categories/create" class="btn">Create Category</a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/footer :: footer"></footer>
+
+    <style>
+        .admin-dashboard {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .stat-card p {
+            font-size: 2rem;
+            margin: 0.5rem 0 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .activity-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .activity-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-list small {
+            display: block;
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

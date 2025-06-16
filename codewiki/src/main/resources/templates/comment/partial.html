@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head('Comment Section')">
+</head>
+<body>
+    <!-- Comment Form Partial -->
+    <div class="comment-form" th:fragment="comment-form(articleId)">
+        <form th:action="@{/comments/add}" method="post">
+            <input type="hidden" name="articleId" th:value="${articleId}">
+            <textarea name="content" placeholder="Write your comment..." required 
+                     class="form-control" rows="4"></textarea>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Comment List Partial -->
+    <div class="comments-list" th:fragment="comment-list(comments)">
+        <div class="comment" th:each="comment : ${comments}">
+            <div class="comment-header">
+                <a th:href="@{/user/profile(id=${comment.author.id})}" 
+                   th:text="${comment.author.username}"></a>
+                <span th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+            <div class="comment-body" th:utext="${@markdownParser.parse(comment.content)}"></div>
+            <div class="comment-actions" th:if="${comment.author.id == currentUserId || isAdmin}">
+                <form th:action="@{/comments/delete(id=${comment.id})}" method="post" 
+                      onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </div>
+            <div class="comment-report" th:if="${comment.author.id != currentUserId && isAuthenticated}">
+                <a th:href="@{/report/create(type='comment', id=${comment.id})}" 
+                   class="btn btn-sm btn-report">Report</a>
+            </div>
+        </div>
+
+        <div class="no-comments" th:if="${comments.empty}">
+            <p>No comments yet. Be the first to comment!</p>
+        </div>
+    </div>
+
+    <style>
+        .comment-form {
+            margin-bottom: 2rem;
+        }
+        
+        .comment {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comment:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-body {
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .comment-report {
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+        
+        .no-comments {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-report {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</body>
+</html>
