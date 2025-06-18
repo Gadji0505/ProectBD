@@ -1,0 +1,130 @@
+/* public/css/style.css */
+
+/* Базовый сброс стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Гарантирует, что футер будет внизу страницы */
+}
+
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    flex-grow: 1; /* Позволяет контейнеру занимать доступное пространство */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #0056b3; /* Синий заголовок */
+    margin-bottom: 15px;
+}
+
+a {
+    color: #007bff; /* Синие ссылки */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+/* Стили для навигации */
+nav {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+nav ul li a:hover {
+    text-decoration: none;
+    color: #a0d8ff;
+}
+
+/* Стили для футера */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 30px;
+}
+
+/* Стили для форматирования Markdown кода */
+pre {
+    background-color: #282c34; /* Темный фон для блока кода */
+    color: #abb2bf; /* Светлый текст */
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto; /* Горизонтальный скролл для длинных строк */
+    margin-bottom: 1em;
+}
+
+code {
+    font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace; /* Моноширинный шрифт для кода */
+    font-size: 0.9em;
+}
+
+pre code {
+    display: block; /* Сделать блок кода блочным элементом */
+}
+
+/* Просто для примера: стили для формы ввода */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #28a745; /* Зеленая кнопка */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #218838;
+}
