@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>История ревизий: <span th:text="${article.title}"></span></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>История ревизий статьи: "<span th:text="${article.title}"></span>"</h1>
+        <p><a th:href="@{/articles/view/{slug}(slug=${article.slug})}" class="button back-button">Вернуться к статье</a></p>
+
+        <div th:if="${#lists.isEmpty(revisions)}">
+            <p>У этой статьи пока нет истории ревизий.</p>
+        </div>
+        <table th:unless="${#lists.isEmpty(revisions)}" class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID Ревизии</th>
+                    <th>Автор правки</th>
+                    <th>Дата правки</th>
+                    <th>Заголовок на момент правки</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="revision : ${revisions}">
+                    <td th:text="${revision.id}">1</td>
+                    <td th:text="${revision.author?.username ?: 'Неизвестно'}"></td>
+                    <td th:text="${#temporals.format(revision.revisionDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${revision.title}"></td>
+                    <td>
+                        <a th:href="@{/articles/revision/{id}(id=${revision.id})}" class="button view-button">Просмотреть</a>
+                        </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все категории CodeWiki</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>Все категории</h1>
+
+        <div th:if="${#lists.isEmpty(categories)}">
+            <p>Категории пока не добавлены.</p>
+        </div>
+        <ul th:unless="${#lists.isEmpty(categories)}" class="category-list">
+            <li th:each="category : ${categories}">
+                <h3><a th:href="@{/categories/view/{slug}(slug=${category.slug})}" th:text="${category.name}">Название категории</a></h3>
+                <p th:if="${#lists.size(category.articles) > 0}">
+                    Статей в категории: <span th:text="${#lists.size(category.articles)}">0</span>
+                </p>
+                <p th:unless="${#lists.size(category.articles) > 0}">
+                    Статей в категории: 0
+                </p>
+            </li>
+        </ul>
+        <p><a th:href="@{/articles/new}" class="button">Написать новую статью</a></p>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Footer Fragment</title>
+</head>
+<body>
+    <footer class="main-footer" th:fragment="footer">
+        <div class="container">
+            <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2024</span> CodeWiki. Все права защищены.</p>
+            <nav class="footer-nav">
+                <ul>
+                    <li><a href="#">О проекте</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <li><a href="#">Политика конфиденциальности</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+</body>
+</html>

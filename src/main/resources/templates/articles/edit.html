@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать статью - CodeWiki</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container">
+        <div id="main-content">
+            <h1>Редактировать статью: <span th:text="${article.title}"></span></h1>
+
+            <div th:if="${message}" class="message success">
+                <p th:text="${message}"></p>
+            </div>
+            <div th:if="${error}" class="message error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form th:action="@{/articles/edit}" th:object="${article}" method="post">
+                <input type="hidden" th:field="*{id}"> <input type="hidden" th:field="*{slug}"> <div class="form-group">
+                    <label for="title">Заголовок статьи:</label>
+                    <input type="text" id="title" th:field="*{title}" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Содержание (Markdown):</label>
+                    <textarea id="content" th:field="*{content}" rows="20" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="status">Статус:</label>
+                    <select id="status" th:field="*{status}">
+                        <option value="published">Опубликована</option>
+                        <option value="draft">Черновик</option>
+                        <option value="archived">Архивирована</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn">Сохранить изменения</button>
+                <a th:href="@{/articles/view/{slug}(slug=${article.slug})}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль пользователя: <span th:text="${user.username}"></span></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content profile-page">
+        <h1>Профиль пользователя: <span th:text="${user.username}"></span></h1>
+
+        <div class="user-info-card">
+            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>Репутация:</strong> <span th:text="${user.reputation}"></span></p>
+            <p><strong>Роли:</strong>
+                <span th:each="role, iterStat : ${user.roles}">
+                    <span th:text="${role.name}"></span><span th:if="${!iterStat.last}">, </span>
+                </span>
+            </p>
+            <p><strong>Зарегистрирован:</strong> <span th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm')}"></span></p>
+        </div>
+
+        <section class="user-contributions">
+            <h2>Мои статьи (<span th:text="${#lists.size(userArticles)}">0</span>)</h2>
+            <div th:if="${#lists.isEmpty(userArticles)}">
+                <p>Вы еще не написали ни одной статьи.</p>
+            </div>
+            <ul th:unless="${#lists.isEmpty(userArticles)}" class="article-list">
+                <li th:each="article : ${userArticles}">
+                    <h3><a th:href="@{/articles/view/{slug}(slug=${article.slug})}" th:text="${article.title}">Название статьи</a></h3>
+                    <p class="article-meta">
+                        Опубликовано: <span th:text="${#temporals.format(article.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                    </p>
+                    <p th:text="${#strings.abbreviate(article.content, 100)} + '...'"></p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="user-contributions">
+            <h2>Мои комментарии (<span th:text="${#lists.size(userComments)}">0</span>)</h2>
+            <div th:if="${#lists.isEmpty(userComments)}">
+                <p>Вы еще не оставили ни одного комментария.</p>
+            </div>
+            <ul th:unless="${#lists.isEmpty(userComments)}" class="comment-list">
+                <li th:each="comment : ${userComments}">
+                    <p class="comment-content" th:text="${comment.content}"></p>
+                    <p class="comment-meta">
+                        К статье: <a th:href="@{/articles/view/{slug}(slug=${comment.article.slug})}" th:text="${comment.article.title}"></a> |
+                        Отправлен: <span th:text="${#temporals.format(comment.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                    </p>
+                </li>
+            </ul>
+        </section>
+
+        </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

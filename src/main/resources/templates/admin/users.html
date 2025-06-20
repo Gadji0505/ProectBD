@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление пользователями</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>Управление пользователями</h1>
+
+        <div th:if="${message}" class="alert alert-success success-message">
+            <p th:text="${message}"></p>
+        </div>
+        <div th:if="${error}" class="alert alert-danger error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div th:if="${#lists.isEmpty(users)}">
+            <p>Пользователи пока не зарегистрированы.</p>
+        </div>
+        <table th:unless="${#lists.isEmpty(users)}" class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя пользователя</th>
+                    <th>Email</th>
+                    <th>Репутация</th>
+                    <th>Роли</th>
+                    <th>Дата регистрации</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}">1</td>
+                    <td th:text="${user.username}">user123</td>
+                    <td th:text="${user.email}">user@example.com</td>
+                    <td th:text="${user.reputation}">0</td>
+                    <td>
+                        <span th:each="role, iterStat : ${user.roles}">
+                            <span th:text="${role.name}">ROLE_USER</span><span th:if="${!iterStat.last}">, </span>
+                        </span>
+                    </td>
+                    <td th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm')}">2023-01-01</td>
+                    <td>
+                        <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="button edit-button">Редактировать</a>
+                        <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" style="display: inline;" onsubmit="return confirm('Вы уверены, что хотите удалить этого пользователя?');">
+                            <button type="submit" class="button delete-button">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p><a th:href="@{/admin}" class="button back-button">Вернуться в админ-панель</a></p>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

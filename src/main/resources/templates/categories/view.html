@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Статьи в категории "<span th:text="${category.name}"></span>"</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1 class="category-title">Категория: "<span th:text="${category.name}">Название категории</span>"</h1>
+
+        <h2>Статьи в категории "<span th:text="${category.name}"></span>"</h2>
+
+        <div th:if="${articles.isEmpty()}">
+            <p>В этой категории пока нет статей.</p>
+        </div>
+        <ul th:unless="${articles.isEmpty()}" class="article-list">
+            <li th:each="article : ${articles}">
+                <h3><a th:href="@{/articles/view/{slug}(slug=${article.slug})}" th:text="${article.title}">Заголовок статьи</a></h3>
+                <p class="article-meta">
+                    Автор: <span th:text="${article.author.username}"></span> |
+                    Опубликовано: <span th:text="${#temporals.format(article.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                </p>
+                <p th:text="${#strings.abbreviate(article.content, 200)} + '...'"></p>
+                <a th:href="@{/articles/view/{slug}(slug=${article.slug})}" class="read-more">Читать далее &rarr;</a>
+            </li>
+        </ul>
+
+        <p style="margin-top: 20px;"><a th:href="@{/categories}" class="button back-button">← Вернуться ко всем категориям</a></p>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

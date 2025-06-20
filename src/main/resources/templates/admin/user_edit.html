@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать пользователя</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>Редактировать пользователя: <span th:text="${user.username}"></span></h1>
+
+        <div th:if="${error}" class="alert alert-danger error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/admin/users/save}" th:object="${user}" method="post" class="auth-form">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-group">
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" th:field="*{username}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:field="*{email}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="reputation">Репутация:</label>
+                <input type="number" id="reputation" th:field="*{reputation}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Новый пароль (оставьте пустым, если не меняете):</label>
+                <input type="password" id="password" name="password" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Роли:</label>
+                <div th:each="role : ${allRoles}">
+                    <input type="checkbox" th:id="${'role_' + role.id}" th:name="selectedRoles" th:value="${role.id}"
+                           th:checked="${userRoleIds.contains(role.id)}">
+                    <label th:for="${'role_' + role.id}" th:text="${role.name}"></label>
+                </div>
+            </div>
+            <button type="submit" class="button submit-button">Сохранить</button>
+            <a th:href="@{/admin/users}" class="button back-button">Отмена</a>
+        </form>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

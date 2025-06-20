@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск по CodeWiki</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>Поиск по статьям</h1>
+
+        <form th:action="@{/search}" method="get" class="search-form">
+            <div class="form-group search-input-group">
+                <input type="text" name="query" th:value="${query}" placeholder="Введите запрос..." class="form-control search-input">
+                <button type="submit" class="button search-button">Искать</button>
+            </div>
+        </form>
+
+        <div th:if="${query != null}">
+            <h2>Результаты поиска для "<span th:text="${query}"></span>"</h2>
+
+            <div th:if="${#lists.isEmpty(articles)}">
+                <p>По вашему запросу ничего не найдено.</p>
+            </div>
+            <ul th:unless="${#lists.isEmpty(articles)}" class="article-list">
+                <li th:each="article : ${articles}">
+                    <h3><a th:href="@{/articles/view/{slug}(slug=${article.slug})}" th:text="${article.title}">Заголовок статьи</a></h3>
+                    <p class="article-meta">
+                        Автор: <span th:text="${article.author.username}"></span> |
+                        Опубликовано: <span th:text="${#temporals.format(article.createdAt, 'dd-MM-yyyy HH:mm')}"></span> |
+                        Категория: <span th:if="${article.category}" th:text="${article.category.name}"></span>
+                        <span th:unless="${article.category}">Без категории</span>
+                    </p>
+                    <div class="article-tags">
+                        Теги:
+                        <span th:if="${#sets.isEmpty(article.tags)}">Нет тегов</span>
+                        <span th:each="tag, iterStat : ${article.tags}">
+                            <a th:href="@{/tags/view/{id}(id=${tag.id})}" th:text="${tag.name}"></a><span th:if="${!iterStat.last}">, </span>
+                        </span>
+                    </div>
+                    <p th:utext="${#strings.abbreviate(article.content, 200)} + '...'"></p>
+                    <a th:href="@{/articles/view/{slug}(slug=${article.slug})}" class="read-more">Читать далее &rarr;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все теги CodeWiki</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>Все теги</h1>
+
+        <div th:if="${#lists.isEmpty(tags)}">
+            <p>Теги пока не добавлены.</p>
+        </div>
+        <ul th:unless="${#lists.isEmpty(tags)}" class="tag-list">
+            <li th:each="tag : ${tags}">
+                <h3><a th:href="@{/tags/view/{id}(id=${tag.id})}" th:text="${tag.name}">Название тега</a></h3>
+                <p th:if="${#lists.size(tag.articles) > 0}">
+                    Статей с этим тегом: <span th:text="${#lists.size(tag.articles)}">0</span>
+                </p>
+                <p th:unless="${#lists.size(tag.articles) > 0}">
+                    Статей с этим тегом: 0
+                </p>
+            </li>
+        </ul>
+        <p><a th:href="@{/articles/new}" class="button">Написать новую статью</a></p>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

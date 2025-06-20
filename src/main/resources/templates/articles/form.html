@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${isNew ? 'Создать новую статью' : 'Редактировать статью'}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content article-form-container">
+        <h1 th:text="${isNew ? 'Создать новую статью' : 'Редактировать статью'}"></h1>
+
+        <div th:if="${error}" class="alert alert-danger error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/articles/save}" th:object="${article}" method="post">
+            <input type="hidden" th:field="*{id}" th:if="${!isNew}">
+
+            <div class="form-group">
+                <label for="title">Заголовок статьи:</label>
+                <input type="text" id="title" th:field="*{title}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Содержание (Markdown):</label>
+                <textarea id="content" th:field="*{content}" rows="15" class="form-control" required></textarea>
+                <small>Используйте синтаксис Markdown для форматирования текста.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Категория:</label>
+                <select id="category" name="categoryName" class="form-control">
+                    <option value="">-- Выбрать категорию --</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.name}"
+                            th:text="${cat.name}"
+                            th:selected="${article.category != null and article.category.id == cat.id}">
+                        Категория
+                    </option>
+                </select>
+                <small>Если нужной категории нет, введите ее имя в поле ниже, и она будет создана.</small>
+                <input type="text" id="newCategoryName" name="categoryName" th:value="${article.category?.name}" class="form-control" placeholder="Или введите имя новой категории">
+            </div>
+
+            <div class="form-group">
+                <label for="tagNames">Теги (через запятую):</label>
+                <input type="text" id="tagNames" name="tagNames" th:value="${currentTagNames}" class="form-control" placeholder="Пример: Java, Spring Boot, Базы данных">
+                <small>Перечислите теги через запятую. Если тег не существует, он будет создан.</small>
+            </div>
+
+            <button type="submit" class="button submit-button" th:text="${isNew ? 'Создать статью' : 'Сохранить изменения'}"></button>
+            <a th:href="@{/articles}" class="button back-button">Отмена</a>
+        </form>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

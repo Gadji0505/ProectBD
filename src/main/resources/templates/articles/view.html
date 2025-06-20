@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${article.title}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content article-view">
+        <h1 th:text="${article.title}">Заголовок статьи</h1>
+        <p class="article-meta">
+            Автор: <span th:text="${article.author.username}"></span> |
+            Опубликовано: <span th:text="${#temporals.format(article.createdAt, 'dd-MM-yyyy HH:mm')}"></span> |
+            Обновлено: <span th:text="${#temporals.format(article.updatedAt, 'dd-MM-yyyy HH:mm')}"></span> |
+            Категория: <span th:if="${article.category}" th:text="${article.category.name}"></span>
+            <span th:unless="${article.category}">Без категории</span>
+        </p>
+        <div class="article-tags">
+            Теги:
+            <span th:if="${#sets.isEmpty(article.tags)}">Нет тегов</span>
+            <span th:each="tag, iterStat : ${article.tags}">
+                <a th:href="@{/tags/view/{id}(id=${tag.id})}" th:text="${tag.name}"></a><span th:if="${!iterStat.last}">, </span>
+            </span>
+        </div>
+
+        <div class="article-content">
+            <div th:utext="${renderedContent}"></div>
+        </div>
+
+        <div class="article-actions" sec:authorize="hasRole('ADMIN') or (@articleService.getArticleById(article.id).orElse(null)?.author?.email == authentication.name)">
+            <a th:href="@{/articles/edit/{id}(id=${article.id})}" class="button edit-button">Редактировать</a>
+            <a th:href="@{/articles/history/{id}(id=${article.id})}" class="button history-button">История версий</a>
+            <form th:action="@{/articles/delete/{id}(id=${article.id})}" method="post" style="display: inline;" onsubmit="return confirm('Вы уверены, что хотите удалить эту статью?');">
+                <button type="submit" class="button delete-button">Удалить</button>
+            </form>
+        </div>
+
+        <section id="comments" class="comments-section">
+            <h2>Комментарии (<span th:text="${#lists.size(comments)}">0</span>)</h2>
+
+            <div th:if="${message}" class="alert alert-success success-message">
+                <p th:text="${message}"></p>
+            </div>
+            <div th:if="${error}" class="alert alert-danger error-message">
+                <p th:text="${error}"></p>
+            </div>
+
+            <div th:if="${#lists.isEmpty(comments)}">
+                <p>Пока нет комментариев. Будьте первым!</p>
+            </div>
+            <ul th:unless="${#lists.isEmpty(comments)}" class="comment-list">
+                <li th:each="comment : ${comments}">
+                    <p class="comment-author"><strong th:text="${comment.author.username}"></strong></p>
+                    <p class="comment-date" th:text="${#temporals.format(comment.createdAt, 'dd-MM-yyyy HH:mm')}"></p>
+                    <p class="comment-content" th:text="${comment.content}"></p>
+                    <div class="comment-actions" sec:authorize="hasRole('ADMIN') or (@commentService.getCommentById(comment.id).orElse(null)?.author?.email == authentication.name)">
+                        <form th:action="@{/articles/comments/delete/{id}(id=${comment.id})}" method="post" style="display: inline;" onsubmit="return confirm('Вы уверены, что хотите удалить этот комментарий?');">
+                            <button type="submit" class="button delete-button small-button">Удалить комментарий</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+
+            <div sec:authorize="isAuthenticated()" class="add-comment-form">
+                <h3>Добавить комментарий</h3>
+                <form th:action="@{/articles/{articleId}/comments(articleId=${article.id})}" th:object="${newComment}" method="post">
+                    <div class="form-group">
+                        <label for="commentContent">Ваш комментарий:</label>
+                        <textarea id="commentContent" th:field="*{content}" rows="5" class="form-control" required></textarea>
+                    </div>
+                    <button type="submit" class="button submit-button">Оставить комментарий</button>
+                </form>
+            </div>
+            <div sec:authorize="!isAuthenticated()" class="login-prompt">
+                <p>Чтобы оставить комментарий, пожалуйста, <a th:href="@{/login}">войдите</a> или <a th:href="@{/register}">зарегистрируйтесь</a>.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

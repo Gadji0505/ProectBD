@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация в CodeWiki</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container auth-form-container">
+        <h1>Регистрация</h1>
+
+        <div th:if="${error}" class="alert alert-danger error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/register}" th:object="${user}" method="post" class="auth-form">
+            <div class="form-group">
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" th:field="*{username}" class="form-control" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:field="*{email}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" th:field="*{password}" class="form-control" required>
+            </div>
+            <button type="submit" class="button submit-button">Зарегистрироваться</button>
+        </form>
+
+        <p class="auth-link">Уже есть аккаунт? <a th:href="@{/login}">Войти</a></p>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

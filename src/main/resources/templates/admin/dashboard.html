@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель CodeWiki</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>Админ-панель</h1>
+
+        <div th:if="${message}" class="alert alert-success success-message">
+            <p th:text="${message}"></p>
+        </div>
+        <div th:if="${error}" class="alert alert-danger error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <section class="admin-dashboard-links">
+            <h2>Управление</h2>
+            <ul>
+                <li><a th:href="@{/admin/users}">Пользователи</a></li>
+                <li><a th:href="@{/admin/articles}">Статьи</a></li> <li><a th:href="@{/admin/categories}">Категории</a></li>
+                <li><a th:href="@{/admin/tags}">Теги</a></li>
+                <li><a th:href="@{/admin/reports}">Жалобы</a></li>
+                </ul>
+        </section>
+
+        <section class="admin-stats">
+            <h2>Статистика (пример)</h2>
+            <p>Всего пользователей: <span th:text="${#lists.size(users)}">0</span></p> <p>Всего статей: <span th:text="${#lists.size(articles)}">0</span></p>
+            <p>Открытых жалоб: <span th:text="${#lists.size(openReports)}">0</span></p>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

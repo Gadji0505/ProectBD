@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Header Fragment</title>
+</head>
+<body>
+    <header class="main-header" th:fragment="header">
+        <div class="container">
+            <div class="logo">
+                <a th:href="@{/}">CodeWiki</a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a th:href="@{/}">Главная</a></li>
+                    <li><a th:href="@{/articles}">Статьи</a></li>
+                    <li><a th:href="@{/tags}">Теги</a></li>
+                    <li><a th:href="@{/categories}">Категории</a></li>
+                    <li><a th:href="@{/articles/new}" sec:authorize="isAuthenticated()">Написать статью</a></li>
+                    <li><a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Админка</a></li>
+                </ul>
+            </nav>
+            <div class="auth-controls">
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/profile}" class="button profile-button" sec:authentication="name">Профиль</a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="button logout-button">Выйти</button>
+                    </form>
+                </div>
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/login}" class="button login-button">Войти</a>
+                    <a th:href="@{/register}" class="button register-button">Регистрация</a>
+                </div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>

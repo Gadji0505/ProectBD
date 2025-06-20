@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ревизия #<span th:text="${revision.id}"></span> статьи "<span th:text="${article.title}"></span>"</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content article-view">
+        <h1>Ревизия #<span th:text="${revision.id}"></span> статьи "<span th:text="${article.title}"></span>"</h1>
+        <p class="article-meta">
+            Автор правки: <strong th:text="${revision.author?.username ?: 'Неизвестно'}"></strong> |
+            Дата правки: <span th:text="${#temporals.format(revision.revisionDate, 'dd-MM-yyyy HH:mm')}"></span>
+        </p>
+        <p><strong>Заголовок на момент правки:</strong> <span th:text="${revision.title}"></span></p>
+
+        <h2>Содержание ревизии:</h2>
+        <div class="article-content revision-content">
+            <div th:utext="${renderedContent}"></div>
+        </div>
+
+        <p>
+            <a th:href="@{/articles/history/{id}(id=${article.id})}" class="button back-button">Вернуться к истории</a>
+            <a th:href="@{/articles/view/{slug}(slug=${article.slug})}" class="button">Вернуться к текущей статье</a>
+        </p>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

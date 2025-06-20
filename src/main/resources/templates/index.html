@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать в CodeWiki</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container main-content">
+        <h1>Добро пожаловать в CodeWiki!</h1>
+        <p>Ваша энциклопедия знаний для программистов.</p>
+
+        <section class="latest-articles">
+            <h2>Последние статьи</h2>
+            <div th:if="${#lists.isEmpty(latestArticles)}">
+                <p>Пока нет опубликованных статей.</p>
+            </div>
+            <ul th:unless="${#lists.isEmpty(latestArticles)}" class="article-list">
+                <li th:each="article : ${latestArticles}">
+                    <h3><a th:href="@{/articles/view/{slug}(slug=${article.slug})}" th:text="${article.title}">Заголовок статьи</a></h3>
+                    <p class="article-meta">
+                        Автор: <span th:text="${article.author.username}"></span> |
+                        Опубликовано: <span th:text="${#temporals.format(article.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                    </p>
+                    <p th:text="${#strings.abbreviate(article.content, 150)} + '...'"></p>
+                    <a th:href="@{/articles/view/{slug}(slug=${article.slug})}" class="read-more">Читать далее &rarr;</a>
+                </li>
+            </ul>
+            <p><a th:href="@{/articles}" class="button view-all-button">Посмотреть все статьи</a></p>
+        </section>
+
+        </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
